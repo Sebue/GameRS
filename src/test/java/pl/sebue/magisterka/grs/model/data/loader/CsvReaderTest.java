@@ -25,7 +25,7 @@ public class CsvReaderTest {
     public void shouldGatherAllGames() {
         var games = csvReader.gatherAllGames();
 
-        assertEquals(12975, games.size());
+        assertEquals(13096, games.size());
     }
 
     @Test
@@ -34,16 +34,17 @@ public class CsvReaderTest {
 
         var gameStatisticList = csvReader.gatherAllGameStatistics(games);
 
-        assertEquals(46278, gameStatisticList.size());
+        assertEquals(66977, gameStatisticList.size());
     }
 
     @Test
     public void shouldHasAllDataOnDb(){
-        Session session = new HibernateFactory().getSessionFactory().openSession();
+//        csvReader.gatherRecommendationInputData();
+        Session session = HibernateFactory.INSTANCE.getSessionFactory().openSession();
         List<Game> gamesOnDb = session.createQuery("from Game", Game.class).list();
         List<GameStatistic> gameStatisticsOnDb = session.createQuery("from GameStatistic", GameStatistic.class).list();
 
-        assertEquals(12975, gamesOnDb.size());
-        assertEquals(46278, gameStatisticsOnDb.size());
+        assertEquals(13096, gamesOnDb.size());
+        assertEquals(66977, gameStatisticsOnDb.size());
     }
 }

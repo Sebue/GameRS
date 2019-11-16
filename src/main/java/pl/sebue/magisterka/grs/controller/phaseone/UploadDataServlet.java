@@ -15,11 +15,14 @@ public class UploadDataServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        File gamesCsv = new File(getClass().getResource("games.csv").getFile());
-        File gamesStatisticCsv = new File(getClass().getResource("players.csv").getFile());
+        File gamesCsv = new File(getClass().getClassLoader().getResource("games.csv").getFile());
+        File gamesStatisticCsv = new File(getClass().getClassLoader().getResource("players.csv").getFile());
         CsvReader csvReader = new CsvReader(gamesCsv.getPath(), gamesStatisticCsv.getPath());
+
+        csvReader.gatherRecommendationInputData();
+
         PrintWriter writer = response.getWriter();
         response.setContentType("text/html");
-        writer.println("<h2>Hello, World</h2><br>");
+        writer.println("<h2>Data uploaded!</h2><br>");
     }
 }

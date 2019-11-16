@@ -14,7 +14,7 @@
 <h1>GRS - GameRecommendationSystem</h1>
 <br>
 <h3>Get recommendation for user by id</h3>
-<FORM ACTION="/GameRecommendationSystem/???"
+<FORM ACTION="/GameRecommendationSystem/recommendation"
       METHOD="GET">
     User ID:
     <INPUT TYPE="TEXT" NAME="userId"><BR>
@@ -23,7 +23,7 @@
 <hr>
 ... or choose user from list: <br>
     <%
-        org.hibernate.Session sessionHibernate = new HibernateFactory().getSessionFactory().openSession();
+        org.hibernate.Session sessionHibernate = HibernateFactory.INSTANCE.getSessionFactory().openSession();
         List<GameStatistic> gameStatisticsOnDb = sessionHibernate.createQuery("from GameStatistic", GameStatistic.class).list();
         Set<Long> users = gameStatisticsOnDb.stream().map(GameStatistic::getUserId).collect(Collectors.toSet());
         for (Long userId : users) {

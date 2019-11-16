@@ -1,10 +1,3 @@
-drop table if exists steamuser;
-create table steamuser
-(
-userId bigint not null,
-primary key (userId)
-);
-
 drop table if exists game;
 create table game
 (

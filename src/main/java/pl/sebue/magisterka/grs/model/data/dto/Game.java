@@ -45,7 +45,9 @@ public class Game implements Serializable {
         //for query purpose
     }
 
-    private Game(String name, int releaseYear, int requiredAge, boolean hasDemoVersion, int dlcCount, int metacriticScore, boolean isControllerSupported, int recommendationCount, int achievementCount, float initialPrice, float finalPrice, int ownerCount) {
+    private transient String comparableName; //for comparing purpose - without it not all data matches
+
+    private Game(String name, int releaseYear, int requiredAge, boolean hasDemoVersion, int dlcCount, int metacriticScore, boolean isControllerSupported, int recommendationCount, int achievementCount, float initialPrice, float finalPrice, int ownerCount, String comparableName) {
         this.name = name;
         this.releaseYear = releaseYear;
         this.requiredAge = requiredAge;
@@ -58,6 +60,7 @@ public class Game implements Serializable {
         this.initialPrice = initialPrice;
         this.finalPrice = finalPrice;
         this.ownerCount = ownerCount;
+        this.comparableName = comparableName;
     }
 
     public Long getGameId() {
@@ -164,9 +167,18 @@ public class Game implements Serializable {
         this.ownerCount = ownerCount;
     }
 
+    public String getComparableName() {
+        return comparableName;
+    }
+
+    public void setComparableName(String comparableName) {
+        this.comparableName = comparableName;
+    }
+
     public static class Builder {
         private static final Pattern RELEASE_YEAR_PATTERN = Pattern.compile(".*(\\d{4})");
         private boolean shouldBuild = true;
+        private String comparableName;
 
         private String name;
         private int releaseYear;
@@ -180,6 +192,11 @@ public class Game implements Serializable {
         private float initialPrice;
         private float finalPrice;
         private int ownerCount;
+
+        public Builder setComparableName(String comparableName) {
+            this.comparableName = comparableName;
+            return this;
+        }
 
         public Builder setName(String name) {
             this.name = name;
@@ -342,7 +359,7 @@ public class Game implements Serializable {
         public Optional<Game> build() {
             if (shouldBuild) {
                 return Optional.of(new Game(name, releaseYear, requiredAge, hasDemoVersion, dlcCount, metacriticScore, isControllerSupported, recommendationCount, achievementCount,
-                        initialPrice, finalPrice, ownerCount));
+                        initialPrice, finalPrice, ownerCount, comparableName));
             } else {
                 return Optional.empty();
             }
