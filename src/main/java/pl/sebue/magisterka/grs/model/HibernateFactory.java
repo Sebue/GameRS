@@ -1,10 +1,10 @@
-package pl.sebue.magisterka.grs.data;
+package pl.sebue.magisterka.grs.model;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import pl.sebue.magisterka.grs.data.dto.Game;
-import pl.sebue.magisterka.grs.data.dto.GameStatistic;
+import pl.sebue.magisterka.grs.model.data.dto.Game;
+import pl.sebue.magisterka.grs.model.data.dto.GameStatistic;
 
 public class HibernateFactory {
 

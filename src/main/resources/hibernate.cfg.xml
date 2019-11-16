@@ -11,6 +11,6 @@
         <property name="hibernate.connection.autocommit">true</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 
-        <mapping class="pl.sebue.magisterka.grs.data.dto.Game" />
+        <mapping class="pl.sebue.magisterka.grs.model.data.dto.Game" />
     </session-factory>
 </hibernate-configuration>

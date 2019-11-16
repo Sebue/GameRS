@@ -1,4 +1,4 @@
-package pl.sebue.magisterka.grs.data.dto;
+package pl.sebue.magisterka.grs.model.data.dto;
 
 import javax.persistence.*;
 import java.io.Serializable;

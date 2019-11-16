@@ -1,11 +1,11 @@
-package pl.sebue.magisterka.grs.data.loader;
+package pl.sebue.magisterka.grs.model.data.loader;
 
 import org.hibernate.Session;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import pl.sebue.magisterka.grs.data.HibernateFactory;
-import pl.sebue.magisterka.grs.data.dto.Game;
-import pl.sebue.magisterka.grs.data.dto.GameStatistic;
+import pl.sebue.magisterka.grs.model.HibernateFactory;
+import pl.sebue.magisterka.grs.model.data.dto.Game;
+import pl.sebue.magisterka.grs.model.data.dto.GameStatistic;
 
 import java.io.File;
 import java.util.List;
