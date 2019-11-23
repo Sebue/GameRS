@@ -26,3 +26,14 @@ userId bigint not null,
 playedHours float not null,
 primary key (gameStatisticId)
 );
+
+drop table if exists recommendation;
+create table recommendation
+(
+recommendationId bigint not null auto_increment,
+gameId bigint not null,
+userId bigint not null,
+probability float not null,
+recommendationType enum ('ITEM_BASED', 'KNOWLEDGE_BASED', 'COLLABORATIVE') not null,
+primary key (recommendationId)
+);

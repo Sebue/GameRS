@@ -1,5 +1,8 @@
 package pl.sebue.magisterka.grs.model.data.dto;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Optional;
@@ -173,6 +176,29 @@ public class Game implements Serializable {
 
     public void setComparableName(String comparableName) {
         this.comparableName = comparableName;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o == this) return true;
+        if (!(o instanceof Game)) {
+            return false;
+        }
+
+        Game game = (Game) o;
+
+        return new EqualsBuilder()
+                .append(name, game.getName())
+                .append(ownerCount, game.getOwnerCount())
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(name)
+                .append(ownerCount)
+                .toHashCode();
     }
 
     public static class Builder {

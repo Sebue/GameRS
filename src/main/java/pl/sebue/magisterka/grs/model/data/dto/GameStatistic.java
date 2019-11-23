@@ -1,5 +1,8 @@
 package pl.sebue.magisterka.grs.model.data.dto;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.*;
 
 @Entity
@@ -57,5 +60,28 @@ public class GameStatistic {
 
     public void setPlayedHours(float playedHours) {
         this.playedHours = playedHours;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o == this) return true;
+        if (!(o instanceof GameStatistic)) {
+            return false;
+        }
+
+        GameStatistic gs = (GameStatistic) o;
+
+        return new EqualsBuilder()
+                .append(userId, gs.getUserId())
+                .append(game, gs.getGame())
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(userId)
+                .append(game)
+                .toHashCode();
     }
 }

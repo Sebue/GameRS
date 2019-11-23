@@ -5,6 +5,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import pl.sebue.magisterka.grs.model.data.dto.Game;
 import pl.sebue.magisterka.grs.model.data.dto.GameStatistic;
+import pl.sebue.magisterka.grs.model.data.dto.Recommendation;
 
 public enum HibernateFactory {
     INSTANCE;
@@ -13,6 +14,7 @@ public enum HibernateFactory {
         Configuration configuration = new Configuration().configure();
         configuration.addAnnotatedClass(Game.class);
         configuration.addAnnotatedClass(GameStatistic.class);
+        configuration.addAnnotatedClass(Recommendation.class);
 
         StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
         SessionFactory sessionFactory = configuration.buildSessionFactory(registryBuilder.build());
