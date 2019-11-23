@@ -18,6 +18,10 @@
           <option name="url" value="https://github.com/katlasik/hibernate-workshop.git" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/Mahendra-Maiti/Content-based-recommender.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
     <option name="cloneParentDir" value="$USER_HOME$/IdeaProjects" />
