@@ -25,7 +25,7 @@ public class SlopeOneCollaborativeRecomendationTest {
     public void cv() {
 
         SlopeCV slopecv = new SlopeCV();
-        Map<Integer, List<GameStatistic>> sth = slopecv.sth();
+        Map<Integer, List<GameStatistic>> sth = slopecv.getSplittedSets();
         List<GameStatistic> dataToTrain = Lists.newArrayList();
         for (int i = 0; i < 9; i++) {
             dataToTrain.addAll(sth.get(i));

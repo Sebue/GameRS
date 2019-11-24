@@ -48,9 +48,9 @@
             <version>0.13.0</version>
         </dependency>
         <dependency>
-            <groupId>nz.ac.waikato.cms.weka</groupId>
-            <artifactId>weka-stable</artifactId>
-            <version>3.8.0</version>
+            <groupId>org.grouplens.lenskit</groupId>
+            <artifactId>lenskit-core</artifactId>
+            <version>2.0</version>
         </dependency>
 
 

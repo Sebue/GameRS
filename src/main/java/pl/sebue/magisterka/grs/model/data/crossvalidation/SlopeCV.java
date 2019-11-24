@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 
 public class SlopeCV {
 
-    public Map<Integer, List<GameStatistic>> sth() {
+    public Map<Integer, List<GameStatistic>> getSplittedSets() {
         Session session = HibernateFactory.INSTANCE.getSessionFactory().openSession();
         List<GameStatistic> gameStatisticsOnDb = session.createQuery("from GameStatistic", GameStatistic.class).list();
-        gameStatisticsOnDb = si(gameStatisticsOnDb); //toremove
+        gameStatisticsOnDb = narrowResults(gameStatisticsOnDb); //toremove
         Collections.shuffle(gameStatisticsOnDb);
         Map<Integer, List<GameStatistic>> datas = new HashMap<Integer, List<GameStatistic>>();
         for (int i = 0; i < 10; i++) {
@@ -25,7 +25,7 @@ public class SlopeCV {
         return datas;
     }
 
-    private List<GameStatistic> si(List<GameStatistic> gameStatisticsOnDb) {
+    private List<GameStatistic> narrowResults(List<GameStatistic> gameStatisticsOnDb) {
         Set<Long> users = gameStatisticsOnDb.stream().map(GameStatistic::getUserId).collect(Collectors.toSet());
         List<GameStatistic> filtered = Lists.newArrayList();
         for (Long userId : users) {
