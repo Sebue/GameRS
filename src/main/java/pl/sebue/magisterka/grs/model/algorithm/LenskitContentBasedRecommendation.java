@@ -8,12 +8,10 @@ import org.grouplens.lenskit.core.LenskitConfiguration;
 import org.grouplens.lenskit.core.LenskitRecommender;
 import org.grouplens.lenskit.data.dao.EventDAO;
 import org.grouplens.lenskit.data.dao.ItemDAO;
-import org.grouplens.lenskit.data.dao.UserDAO;
 import org.grouplens.lenskit.scored.ScoredId;
-import org.hibernate.Session;
-import pl.sebue.magisterka.grs.model.HibernateFactory;
 import pl.sebue.magisterka.grs.model.algorithm.contentbased.GameDAO;
 import pl.sebue.magisterka.grs.model.algorithm.contentbased.GameRatingDAO;
+import pl.sebue.magisterka.grs.model.data.crossvalidation.CrossValidationProvider;
 import pl.sebue.magisterka.grs.model.data.dto.GameStatistic;
 
 import java.util.List;
@@ -33,22 +31,29 @@ public class LenskitContentBasedRecommendation {
         // we automatically get a useful recommender since we have a scorer
         ItemRecommender irec = rec.getItemRecommender();
 
-        Session session = HibernateFactory.INSTANCE.getSessionFactory().openSession();
-        List<GameStatistic> gameStatisticList = session.createQuery("from GameStatistic", GameStatistic.class).list();
-        Set<Long> userIds = gameStatisticList.stream().map(GameStatistic::getUserId).collect(Collectors.toSet());
+        Set<Long> userIds = CrossValidationProvider.getTrainData().stream().map(GameStatistic::getUserId).collect(Collectors.toSet());
 
-        // Generate 5 recommendations for each user
+        List<GameStatistic> testData = CrossValidationProvider.getTestData();
+
+        int allTestCount = 0;
+        int correctCount = 0;
         for (Long uid : userIds) {
-            logger.info("searching for recommendations for user " + uid);
-            List<ScoredId> recs = irec.recommend(uid, 5);
-            if (recs.isEmpty()) {
-                logger.warning("no recommendations for user " + uid + ", do they exist?");
-            }
+//            logger.info("searching for recommendations for user " + uid);
+//            List<ScoredId> recs = irec.recommend(uid, 10);
+//            if (recs.isEmpty()) {
+//                logger.warning("no recommendations for user " + uid + ", do they exist?");
+//            }
+            Set<Long> gameIds = testData.stream().filter(gs -> gs.getUserId().equals(uid)).map(gs -> gs.getGame().getGameId()).collect(Collectors.toSet());
+            List<ScoredId> recs = irec.recommend(uid, gameIds);
+            allTestCount += gameIds.size();
+            correctCount += recs.stream().filter(recommendation -> recommendation.getScore() > 0).filter(recommendation -> gameIds.contains(recommendation.getId())).count();
             System.out.format("recommendations for user %d:\n", uid);
             for (ScoredId id : recs) {
                 System.out.format("  %d: %.4f\n", id.getId(), id.getScore());
             }
         }
+
+        logger.info("Success: " + correctCount + ", all tests: " + allTestCount + " and prediction rate: " + (correctCount/ (float) allTestCount) * 100 + "%");
     }
 
     // LensKit configuration API generates some unchecked warnings, turn them off
@@ -60,9 +65,6 @@ public class LenskitContentBasedRecommendation {
 
         config.bind(ItemDAO.class)
                 .to(GameDAO.class);
-
-        config.bind(UserDAO.class)
-                .to(pl.sebue.magisterka.grs.model.algorithm.contentbased.UserDAO.class);
 
         config.bind(ItemScorer.class)
                 .to(pl.sebue.magisterka.grs.model.algorithm.contentbased.ItemScorer.class);

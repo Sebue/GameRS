@@ -1,8 +1,6 @@
 package pl.sebue.magisterka.grs.model.algorithm.contentbased;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.longs.LongSets;
@@ -12,11 +10,9 @@ import pl.sebue.magisterka.grs.model.HibernateFactory;
 import pl.sebue.magisterka.grs.model.data.dto.Game;
 
 import java.util.List;
-import java.util.Set;
 
 public class GameDAO implements ItemDAO {
-    private transient volatile Long2ObjectMap<List<String>> tagCache;
-    private transient volatile Set<String> vocabCache;
+    private transient volatile LongSet itemIds;
     private transient volatile List<Game> gamesOnDb;
 
     public GameDAO() {
@@ -24,7 +20,7 @@ public class GameDAO implements ItemDAO {
     }
 
     private void ensureTagCache() {
-        if (tagCache == null) {
+        if (itemIds == null) {
             loadCaches();
         }
     }
@@ -32,30 +28,17 @@ public class GameDAO implements ItemDAO {
     private void loadCaches() {
         Session session = HibernateFactory.INSTANCE.getSessionFactory().openSession();
         gamesOnDb = session.createQuery("from Game", Game.class).list();
-        Long2ObjectMap<List<String>> cacheTags = new Long2ObjectOpenHashMap<List<String>>();
-        vocabCache = Sets.newHashSet();
+        Long2ObjectOpenHashMap<List<String>> tagCache = new Long2ObjectOpenHashMap<List<String>>();
         for (Game game : gamesOnDb) {
-            cacheTags.put(game.getGameId(), Lists.newArrayList(game.getMetacriticScore() + ""));
-            vocabCache.add(game.getMetacriticScore() + "");
+            tagCache.put(game.getGameId(), Lists.newArrayList());
         }
-        tagCache = cacheTags;
+        itemIds = LongSets.unmodifiable(tagCache.keySet());
     }
 
     @Override
     public LongSet getItemIds() {
         ensureTagCache();
-        return LongSets.unmodifiable(tagCache.keySet());
-    }
-
-
-    public List<String> getItemTags(long item) {
-        ensureTagCache();
-        return tagCache.get(item);
-    }
-
-    public Set<String> getTagVocabulary() {
-        ensureTagCache();
-        return vocabCache;
+        return itemIds;
     }
 
     public List<Game> getItems(){

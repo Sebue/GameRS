@@ -23,12 +23,14 @@ public class SlopeOneCollaborativeRecomendation {
     private static Map<Game, Map<Game, Integer>> differences = new HashMap<>();
     private static Map<Game, Map<Game, Integer>> frequencies = new HashMap<>();
 
-    public static void slopeOne(List<GameStatistic> gameStatistics, Optional<List<GameStatistic>> dataToPredict) {
+    public static String slopeOne(List<GameStatistic> gameStatistics, Optional<List<GameStatistic>> dataToPredict) {
+        differences = new HashMap<>();
+        frequencies = new HashMap<>();
         Map<Long, Map<Game, Integer>> inputData = getInputData(gameStatistics); //userId, game, rating
 
         buildDifferencesMatrix(inputData);
 
-        predict(inputData, dataToPredict);
+        return predict(inputData, dataToPredict);
     }
 
     private static Map<Long, Map<Game, Integer>> getInputData(List<GameStatistic> gameStatistics) {
@@ -112,7 +114,7 @@ public class SlopeOneCollaborativeRecomendation {
      * Based on existing data predict all missing ratings. If prediction is not
      * possible, the value will be equal to -1
      */
-    private static void predict(Map<Long, Map<Game, Integer>> inputData, Optional<List<GameStatistic>> testSet) {
+    private static String predict(Map<Long, Map<Game, Integer>> inputData, Optional<List<GameStatistic>> testSet) {
         Session session = HibernateFactory.INSTANCE.getSessionFactory().openSession();
 
         HashMap<Game, Integer> userPredictions = new HashMap<Game, Integer>();
@@ -181,6 +183,7 @@ public class SlopeOneCollaborativeRecomendation {
             }
         }
         logger.info("Success: " + correctCount + ", all tests: " + allTestCount + " and prediction rate: " + (correctCount/ (float) allTestCount) * 100 + "%");
+        return (correctCount/ (float) allTestCount) * 100 + "%";
     }
 
     private static Integer divide(int a, int b){
