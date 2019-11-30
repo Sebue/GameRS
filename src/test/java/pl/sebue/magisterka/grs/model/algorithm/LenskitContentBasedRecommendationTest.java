@@ -4,16 +4,14 @@ import com.google.common.collect.Lists;
 import org.grouplens.lenskit.RecommenderBuildException;
 import org.junit.Test;
 import pl.sebue.magisterka.grs.model.data.crossvalidation.CrossValidationProvider;
-import pl.sebue.magisterka.grs.model.data.dto.GameStatistic;
 
 import java.util.List;
-import java.util.Optional;
 
 public class LenskitContentBasedRecommendationTest {
     @Test
     public void sth() {
         try {
-            LenskitContentBasedRecommendation.sth();
+            LenskitContentBasedRecommendation.predict();
         } catch (RecommenderBuildException e) {
             e.printStackTrace();
         }
@@ -23,9 +21,13 @@ public class LenskitContentBasedRecommendationTest {
     public void cv() {
         List<String> results = Lists.newArrayList();
         for (int j = 0; j < 10; j++) {
+            System.out.println(j);
             CrossValidationProvider.cleanData();
-            List<GameStatistic> sth = CrossValidationProvider.getTrainData();
-            results.add(SlopeOneCollaborativeRecomendation.slopeOne(sth, Optional.of(CrossValidationProvider.getTestData())));
+            try {
+                results.add(LenskitContentBasedRecommendation.predict());
+            } catch (RecommenderBuildException e) {
+                e.printStackTrace();
+            }
         }
         for(String result : results){
             System.out.println(result);

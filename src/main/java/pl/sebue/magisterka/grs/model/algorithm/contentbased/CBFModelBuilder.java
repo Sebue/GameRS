@@ -52,16 +52,21 @@ public class CBFModelBuilder implements Provider<CBModel> {
                 double similarity = 1.0 - (Math.abs(gameData.get(0) - comparingGameData.get(0)) / 100.0);   //metacritic
                 similarity += 1.0 - (Math.abs(gameData.get(1) - comparingGameData.get(1)));                 //controllerSupport
                 similarity += 1.0 - (Math.abs(gameData.get(2) - comparingGameData.get(2)) / 20.0);         //releaseYear
+                similarity += 1.0 - (Math.abs(gameData.get(9) - comparingGameData.get(9)));         //requiredAge
+                similarity += 1.0 - (Math.abs(gameData.get(10) - comparingGameData.get(10)));               //demoVersion
+
                 similarity += 1.0 - (Math.abs(gameData.get(3) - comparingGameData.get(3)));                 //ownerCount
                 similarity += 1.0 - (Math.abs(gameData.get(4) - comparingGameData.get(4)));         //achievementCount
                 similarity += 1.0 - (Math.abs(gameData.get(5) - comparingGameData.get(5)));         //dlcCount
                 similarity += 1.0 - (Math.abs(gameData.get(6) - comparingGameData.get(6)));         //initialPrice
                 similarity += 1.0 - (Math.abs(gameData.get(7) - comparingGameData.get(7)));         //finalPrice
                 similarity += 1.0 - (Math.abs(gameData.get(8) - comparingGameData.get(8)));         //recommendationCount
-                similarity += 1.0 - (Math.abs(gameData.get(9) - comparingGameData.get(9)));         //requiredAge
-                similarity += 1.0 - (Math.abs(gameData.get(10) - comparingGameData.get(10)));               //demoVersion
-
                 similarity = similarity / gameData.size();
+
+//                similarity = similarity / 5;
+//                if(similarity < 0.5) {
+//                    System.out.println(similarity);
+//                }
 
                 //accumulate
                 if (similarity > 0) {

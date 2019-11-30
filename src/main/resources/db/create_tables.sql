@@ -34,6 +34,6 @@ recommendationId bigint not null auto_increment,
 gameId bigint not null,
 userId bigint not null,
 probability float not null,
-recommendationType enum ('ITEM_BASED', 'KNOWLEDGE_BASED', 'COLLABORATIVE') not null,
+recommendationType enum ('CONTENT_BASED', 'HYBRID', 'COLLABORATIVE') not null,
 primary key (recommendationId)
 );

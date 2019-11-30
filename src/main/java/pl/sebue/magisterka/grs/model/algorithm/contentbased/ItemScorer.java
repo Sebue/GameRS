@@ -30,17 +30,7 @@ public class ItemScorer extends AbstractItemScorer {
         // Loop over each item requested and score it.
         // The *domain* of the output vector is the items that we are to score.
         for (VectorEntry e: output.fast(VectorEntry.State.EITHER)) {
-            // Score the item represented by 'e'.
-            // Get the item vector for this item
-            SparseVector iv = model.getItemVector(e.getKey());
-//            // TODO Compute the cosine of this item and the user's profile, store it in the output vector
-//            // Cosine b/n iv and userVector
-            double numerator = userVector.dot(iv);
-            double denominator = userVector.norm() * iv.norm();
-            double cosine = numerator / denominator;
-            output.set(e.getKey(), cosine);
-
-//            output.set(e.getKey(), userVector.get(e.getKey()));
+            output.set(e.getKey(), userVector.get(e.getKey()));
         }
     }
 
@@ -56,28 +46,29 @@ public class ItemScorer extends AbstractItemScorer {
         profile.fill(0);
 
         // Iterate over the user's ratings to build their profile
-//        double ratingSum = 0;
-//        int counter = 0;
-//        for (Rating rating: userRatings) {
-//            Preference preference = rating.getPreference();
-//            counter++;
-//            ratingSum += preference.getValue();
-//        }
-//        double avgRating = ratingSum/counter;
-        double maxRating = 0.0;
-        for(Rating rating : userRatings){
+        double ratingSum = 0;
+        int counter = 0;
+        for (Rating rating: userRatings) {
             Preference preference = rating.getPreference();
-            if(preference.getValue() > maxRating){
-                maxRating = preference.getValue();
-            }
+            counter++;
+            ratingSum += preference.getValue();
         }
+        double avgRating = ratingSum/counter;
+
+//        double maxRating = 0.0;
+//        for(Rating rating : userRatings){
+//            Preference preference = rating.getPreference();
+//            if(preference.getValue() > maxRating){
+//                maxRating = preference.getValue();
+//            }
+//        }
 
 
         for(Rating rating: userRatings){
             Preference preference = rating.getPreference();
             double ratingValue = preference.getValue();
-            double multiplier = ratingValue / maxRating;
-//            double multiplier = counter == 1 ? 1.0 : ratingValue - avgRating;
+//            double multiplier = ratingValue / maxRating;
+            double multiplier = counter == 1 ? 1.0 : ratingValue - avgRating;
 
             long itemId = rating.getItemId();
             SparseVector itemVector = this.model.getItemVector(itemId);

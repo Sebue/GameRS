@@ -3,6 +3,7 @@ package pl.sebue.magisterka.grs.model.data.crossvalidation;
 import com.google.common.collect.Lists;
 import org.hibernate.Session;
 import pl.sebue.magisterka.grs.model.HibernateFactory;
+import pl.sebue.magisterka.grs.model.data.dto.Game;
 import pl.sebue.magisterka.grs.model.data.dto.GameStatistic;
 
 import java.util.*;
@@ -56,6 +57,10 @@ public class CrossValidationProvider {
         Set<Long> users = gameStatisticsOnDb.stream().map(GameStatistic::getUserId).collect(Collectors.toSet());
         List<GameStatistic> filtered = Lists.newArrayList();
         for (Long userId : users) {
+//            List<GameStatistic> count = gameStatisticsOnDb.stream()
+//                    .filter(CrossValidationProvider::hasPopulatedValues)
+//                    .filter(gs -> userId.equals(gs.getUserId()))
+//                    .collect(Collectors.toList());
             List<GameStatistic> count = gameStatisticsOnDb.stream().filter(gs -> userId.equals(gs.getUserId())).collect(Collectors.toList());
             if (hasMinimumGames(count.size())) {
                 filtered.addAll(count);
@@ -64,7 +69,15 @@ public class CrossValidationProvider {
         return filtered;
     }
 
+    private static boolean hasPopulatedValues(GameStatistic gs){
+        Game game = gs.getGame();
+        return game.getRecommendationCount() > 0
+                && game.getAchievementCount() > 0
+                && game.getMetacriticScore() > 0
+                && game.getOwnerCount() > 0;
+    }
+
     private static boolean hasMinimumGames(int count) {
-        return count >= 5;
+        return count >= 0;
     }
 }
