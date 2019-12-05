@@ -61,8 +61,9 @@ public class SlopeOneCollaborativeRecomendation {
     }
 
     private static int normalizeRating(float maxValue, float actualValue) {
-        float result = (actualValue / maxValue) * 5.0f;
-        return Math.round(result);
+//        float result = (actualValue / maxValue) * 5.0f;
+//        return Math.round(result);
+        return actualValue >= 10.0f ? 1 : 0;
     }
 
     /**
@@ -142,37 +143,58 @@ public class SlopeOneCollaborativeRecomendation {
                 }
             }
 
-            Map<Game, Integer> clean = new HashMap<Game, Integer>();
+            Map<Game, Float> clean = new HashMap<Game, Float>();
             for (Game j : userPredictions.keySet()) {
                 if (userFrequencies.get(j) > 0) {
-                    clean.put(j, divide(userPredictions.get(j), userFrequencies.get(j)));
+                    clean.put(j, userPredictions.get(j)/ (float) userFrequencies.get(j));
                 }
             }
 
             if (testSet.isPresent()) {
-                float maxValue = highestPlayedHours(testSet.get(), userWithGameAndRating.getKey());
-                List<GameStatistic> gameForUser = testSet.get().stream().filter(gs -> gs.getUserId().equals(userWithGameAndRating.getKey())).collect(Collectors.toList());
-                for (GameStatistic gs : gameForUser) {
-                    Game game = gs.getGame();
-                    if (clean.containsKey(game)) {
-                        Integer prediction = clean.get(game);
-                        int actualValue = normalizeRating(maxValue, gs.getPlayedHours());
-                        float accuracy = actualValue != 0 ? prediction / (float) actualValue : 1.0f;
-//                        System.out.println("UserId: " + gs.getUserId() + "; playedHours: " + gs.getPlayedHours());
-//                        System.out.println("Accuracy: " + accuracy + "; prediction: " + prediction + "; actualValue: " + actualValue);
-                        if (accuracy < 1.1f && accuracy > 0.9f) {
-                            correctCount++;
-                        }
-                        allTestCount++;
+                //recall
+//                float maxValue = highestPlayedHours(testSet.get(), userWithGameAndRating.getKey());
+//                List<GameStatistic> gameForUser = testSet.get().stream().filter(gs -> gs.getUserId().equals(userWithGameAndRating.getKey())).collect(Collectors.toList());
+//                for (GameStatistic gs : gameForUser) {
+//                    Game game = gs.getGame();
+//                    if (clean.containsKey(game)) {
+//                        Float prediction = clean.get(game);
+//                        int actualValue = normalizeRating(maxValue, gs.getPlayedHours());
+//                        float accuracy = actualValue != 0 ? prediction / (float) actualValue : 1.0f;
+////                        System.out.println("UserId: " + gs.getUserId() + "; playedHours: " + gs.getPlayedHours());
+////                        System.out.println("Accuracy: " + accuracy + "; prediction: " + prediction + "; actualValue: " + actualValue);
+//                        if (accuracy < 1.5f && accuracy > 0.5f) {
+//                            correctCount++;
+//                        }
+//                        allTestCount++;
+//                    }
+//                }
+
+                //precision
+                LinkedHashMap<Game, Float> sorted = clean.entrySet().stream()
+                        .sorted(Collections.reverseOrder(comparingByValue()))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+                int i = 0;
+                List<Long> gameForUser = testSet.get().stream()
+                        .filter(gs -> gs.getUserId().equals(userWithGameAndRating.getKey()))
+                        .map(gs -> gs.getGame().getGameId())
+                        .collect(Collectors.toList());
+                for (Map.Entry<Game, Float> sth : sorted.entrySet()) {
+                    allTestCount++;
+                    if(gameForUser.contains(sth.getKey().getGameId())){
+                        correctCount++;
+                    }
+                    if (++i >= 5) {
+                        break;
                     }
                 }
+
             } else {
-                LinkedHashMap<Game, Integer> sorted = clean.entrySet().stream()
+                LinkedHashMap<Game, Float> sorted = clean.entrySet().stream()
                         .sorted(Collections.reverseOrder(comparingByValue()))
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
                 Transaction transaction = session.beginTransaction();
                 int i = 0;
-                for (Map.Entry<Game, Integer> sth : sorted.entrySet()) {
+                for (Map.Entry<Game, Float> sth : sorted.entrySet()) {
                     Recommendation r = new Recommendation(userWithGameAndRating.getKey(), sth.getKey(), sth.getValue(), RecommendationType.COLLABORATIVE);
                     session.save(r);
                     if (++i > 9) {

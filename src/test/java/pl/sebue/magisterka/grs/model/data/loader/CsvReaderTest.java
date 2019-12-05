@@ -2,6 +2,7 @@ package pl.sebue.magisterka.grs.model.data.loader;
 
 import org.hibernate.Session;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import pl.sebue.magisterka.grs.model.HibernateFactory;
 import pl.sebue.magisterka.grs.model.data.dto.Game;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 public class CsvReaderTest {
     private static CsvReader csvReader;
     @BeforeClass

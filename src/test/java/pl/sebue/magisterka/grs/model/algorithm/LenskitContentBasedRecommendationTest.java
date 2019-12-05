@@ -2,11 +2,13 @@ package pl.sebue.magisterka.grs.model.algorithm;
 
 import com.google.common.collect.Lists;
 import org.grouplens.lenskit.RecommenderBuildException;
+import org.junit.Ignore;
 import org.junit.Test;
 import pl.sebue.magisterka.grs.model.data.crossvalidation.CrossValidationProvider;
 
 import java.util.List;
 
+@Ignore
 public class LenskitContentBasedRecommendationTest {
     @Test
     public void sth() {
