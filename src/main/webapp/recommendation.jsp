@@ -10,7 +10,7 @@
 <title>GRS - Sebastian Jasiński</title>
     <meta charset="utf-8">
 </head>
-<body>
+<body style="background-color:#858AE3;color:#32292F">
 <h1>GRS - GameRecommendationSystem</h1>
 <br>
 <h3>Get recommendation for user by id</h3>

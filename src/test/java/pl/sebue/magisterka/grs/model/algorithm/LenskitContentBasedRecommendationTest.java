@@ -13,7 +13,7 @@ public class LenskitContentBasedRecommendationTest {
     @Test
     public void sth() {
         try {
-            LenskitContentBasedRecommendation.predict();
+            LenskitContentBasedRecommendation.predictToDb();
         } catch (RecommenderBuildException e) {
             e.printStackTrace();
         }

@@ -41,7 +41,7 @@ public class CsvReaderTest {
 
     @Test
     public void shouldHasAllDataOnDb(){
-//        csvReader.gatherRecommendationInputData();
+        csvReader.gatherRecommendationInputData();
         Session session = HibernateFactory.INSTANCE.getSessionFactory().openSession();
         List<Game> gamesOnDb = session.createQuery("from Game", Game.class).list();
         List<GameStatistic> gameStatisticsOnDb = session.createQuery("from GameStatistic", GameStatistic.class).list();

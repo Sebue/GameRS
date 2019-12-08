@@ -28,6 +28,7 @@ public class GameServlet extends HttpServlet {
 
         PrintWriter writer = response.getWriter();
         response.setContentType("text/html");
+        writer.println("<body style=\"background-color:#97DFFC;color:#32292F\">");
         writer.println("<h1>GameId: " + gameId + "</h1>");
         writer.println("<h1>Name: " + choosenGame.getName() + "</h1>");
         writer.println("<h2>Required age: " + choosenGame.getRequiredAge() + "</h2>");

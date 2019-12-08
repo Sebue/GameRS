@@ -4,11 +4,11 @@
 <title>GRS - Sebastian Jasiński</title>
     <meta charset="utf-8">
 </head>
-<body>
+<body style="background-color:#643173;color:#32292F" vlink="#0000FF">
 <h1>GRS - GameRecommendationSystem</h1>
 
 <h3>Phase 1: Upload data</h3>
-<a href="/GameRecommendationSystem/uploadData">Upload gathered data to database</a>
+<a href="/GameRecommendationSystem/uploadData.jsp">Upload gathered data to database</a>
 <hr>
 <h3>Phase 2: Calculate recommendation</h3>
 <a href="/GameRecommendationSystem/calculate">Calculate recommendation for data in system</a><br>

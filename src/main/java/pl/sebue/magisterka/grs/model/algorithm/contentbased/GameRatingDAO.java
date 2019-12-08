@@ -9,7 +9,8 @@ import org.grouplens.lenskit.data.dao.SortOrder;
 import org.grouplens.lenskit.data.event.Event;
 import org.grouplens.lenskit.data.event.Rating;
 import org.grouplens.lenskit.data.event.RatingBuilder;
-import pl.sebue.magisterka.grs.model.data.crossvalidation.CrossValidationProvider;
+import org.hibernate.Session;
+import pl.sebue.magisterka.grs.model.HibernateFactory;
 import pl.sebue.magisterka.grs.model.data.dto.GameStatistic;
 
 import java.util.List;
@@ -22,7 +23,9 @@ public class GameRatingDAO implements EventDAO {
 
     private void ensureRatingCache() {
         if (cache == null) {
-            List<GameStatistic> gameStatisticList = CrossValidationProvider.getTrainData();
+            Session session = HibernateFactory.INSTANCE.getSessionFactory().openSession();
+            List<GameStatistic> gameStatisticList = session.createQuery("from GameStatistic", GameStatistic.class).list();
+//            List<GameStatistic> gameStatisticList = CrossValidationProvider.getTrainData();
             List<Rating> ratings = Lists.newArrayList();
             for (GameStatistic gs : gameStatisticList) {
                 Rating rating = new RatingBuilder()
